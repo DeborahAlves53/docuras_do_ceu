@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doçuras do céu — Bolos e Doces Artesanais</title>
+<meta name="description" content="Um pedacinho do céu em cada mordida ☁️ Bolos caseiros feitos com amor em Brás de Pina - RJ. Peça o seu pelo WhatsApp ou Instagram.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ================= GATE DE LOGIN OBRIGATÓRIO ================= -->
+<div class="auth-gate" id="authGate" role="dialog" aria-modal="true" aria-label="Entrar ou criar conta">
+  <div class="auth-gate-card">
+    <img src="images/logo.png" alt="Doçuras do céu" class="auth-gate-logo"
+      onerror="this.style.display='none'">
+    <p class="eyebrow">Um pedacinho do céu em cada mordida ☁️</p>
+
+    <!-- Passo 1: entrar ou criar conta manualmente -->
+    <div id="authStepLogin" class="auth-step">
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" id="tabLoginBtn">Entrar</button>
+        <button type="button" class="auth-tab" id="tabRegisterBtn">Criar conta</button>
+      </div>
+
+      <h1 id="authLoginTitle">Entre para continuar</h1>
+      <p class="auth-gate-desc" id="authLoginDesc">Para acessar o cardápio e fazer pedidos, entre com sua conta. Leva 5 segundos. 🌸</p>
+
+      <!-- Entrar -->
+      <form id="loginForm" class="auth-profile-form">
+        <div class="form-row">
+          <label for="loginEmail">E-mail</label>
+          <input type="email" id="loginEmail" name="email" placeholder="seu@email.com" required autocomplete="email">
+        </div>
+        <div class="form-row">
+          <label for="loginSenha">Senha</label>
+          <input type="password" id="loginSenha" name="senha" placeholder="Sua senha" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+      </form>
+
+      <!-- Criar conta -->
+      <form id="registerForm" class="auth-profile-form" style="display:none">
+        <div class="form-row">
+          <label for="registerNome">Nome</label>
+          <input type="text" id="registerNome" name="nome" placeholder="Seu nome" required autocomplete="name">
+        </div>
+        <div class="form-row">
+          <label for="registerCelular">Celular / WhatsApp</label>
+          <input type="tel" id="registerCelular" name="celular" placeholder="(00) 00000-0000" required
+            inputmode="numeric" autocomplete="tel" maxlength="15">
+        </div>
+        <div class="form-row">
+          <label for="registerEmail">E-mail</label>
+          <input type="email" id="registerEmail" name="email" placeholder="seu@email.com" required autocomplete="email">
+        </div>
+        <div class="form-row">
+          <label for="registerSenha">Senha</label>
+          <input type="password" id="registerSenha" name="senha" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Criar conta</button>
+      </form>
+
+      <p class="auth-gate-fine">Usamos seu cadastro só para identificar seu pedido — nada de spam.</p>
+      <p class="auth-error" id="authLoginError"></p>
+    </div>
+
+    <!-- Passo 2: completar cadastro (idade, endereço, bolo preferido) -->
+    <div id="authStepProfile" class="auth-step" style="display:none">
+      <h1>Só mais um passinho</h1>
+      <p class="auth-gate-desc">Complete seu cadastro para liberar o site.</p>
+      <form id="profileForm" class="auth-profile-form" novalidate>
+        <div class="form-row">
+          <label for="profileIdade">Idade</label>
+          <input type="number" id="profileIdade" name="idade" placeholder="Ex: 28" min="1" max="120" required inputmode="numeric">
+        </div>
+        <div class="form-row">
+          <label for="profileEndereco">Endereço</label>
+          <input type="text" id="profileEndereco" name="endereco" placeholder="Rua, número, bairro, cidade" required minlength="5" autocomplete="street-address">
+        </div>
+        <div class="form-row">
+          <label for="profileBolo">Qual seu bolo preferido?</label>
+          <select id="profileBolo" name="boloPreferido" required></select>
+        </div>
+        <div class="form-row form-consent">
+          <label class="consent-check">
+            <input type="checkbox" id="profileConsent" required>
+            <span>Concordo com o uso desses dados pela Doçuras do céu para contato e novidades, conforme a LGPD.</span>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Entrar no site</button>
+        <p class="auth-error" id="authProfileError"></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ================= DECOR SVG SPRITES (uso interno via <use>) ================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="ico-cake" viewBox="0 0 64 64">
+      <path d="M10 40h44v14a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4V40Z" fill="currentColor" opacity=".9"/>
+      <path d="M8 30a6 6 0 0 1 6-6h36a6 6 0 0 1 6 6v10H8V30Z" fill="currentColor"/>
+      <rect x="30" y="8" width="4" height="12" rx="2" fill="currentColor"/>
+      <circle cx="32" cy="6" r="3" fill="currentColor"/>
+    </symbol>
+    <symbol id="ico-cart" viewBox="0 0 24 24">
+      <path d="M2.5 3h2l.9 2M6 15h11l3-8H5.4M6 15L4.4 5H2.5M6 15l-1.3 2.6A1 1 0 0 0 5.6 19H18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="9" cy="21" r="1.4" fill="currentColor"/>
+      <circle cx="17" cy="21" r="1.4" fill="currentColor"/>
+    </symbol>
+    <symbol id="ico-whatsapp" viewBox="0 0 32 32">
+      <path fill="currentColor" d="M16.01 2.7C8.68 2.7 2.73 8.63 2.72 15.94c0 2.5.67 4.83 1.83 6.85L2.6 29.3l6.68-1.9a13.3 13.3 0 0 0 6.72 1.83h.01c7.32 0 13.28-5.93 13.28-13.24 0-3.54-1.38-6.86-3.9-9.36a13.2 13.2 0 0 0-9.38-3.93Zm0 24.2h-.01a11 11 0 0 1-5.6-1.54l-.4-.24-3.96 1.13 1.06-3.87-.26-.4a10.98 10.98 0 0 1-1.7-5.87c0-6.06 4.94-10.99 11.02-10.99a10.94 10.94 0 0 1 7.79 3.24 10.87 10.87 0 0 1 3.22 7.76c0 6.06-4.95 10.98-11.16 10.98Zm6.03-8.23c-.33-.17-1.96-.97-2.26-1.08-.3-.11-.53-.17-.75.17-.22.33-.86 1.08-1.05 1.3-.19.22-.39.25-.72.08-.33-.17-1.4-.52-2.66-1.65-.98-.88-1.65-1.96-1.84-2.29-.19-.33-.02-.5.15-.67.15-.15.33-.4.5-.6.16-.2.22-.33.33-.55.11-.22.06-.42-.03-.58-.08-.17-.75-1.8-1.02-2.47-.27-.65-.55-.56-.75-.57l-.64-.01c-.22 0-.58.08-.88.42-.3.33-1.16 1.13-1.16 2.76 0 1.63 1.19 3.2 1.35 3.43.17.22 2.34 3.57 5.66 5.01.79.34 1.41.55 1.89.7.79.25 1.51.21 2.08.13.63-.1 1.96-.8 2.24-1.58.28-.77.28-1.44.2-1.58-.08-.14-.3-.22-.63-.39Z"/>
+    </symbol>
+    <symbol id="ico-sprinkle" viewBox="0 0 20 20">
+      <rect x="8" y="0" width="4" height="20" rx="2" fill="currentColor"/>
+    </symbol>
+    <symbol id="ico-calendar" viewBox="0 0 24 24">
+      <rect x="3.5" y="5" width="17" height="15.5" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M3.5 9.5h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <circle cx="8.2" cy="13.5" r="1.1" fill="currentColor"/>
+      <circle cx="12" cy="13.5" r="1.1" fill="currentColor"/>
+      <circle cx="15.8" cy="13.5" r="1.1" fill="currentColor"/>
+    </symbol>
+    <symbol id="ico-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M12 7.3V12l3.2 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ico-flourish" viewBox="0 0 200 24">
+      <path d="M0 12c20-14 30 14 50 0s30-14 50 0 30 14 50 0 30-14 50 0" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <circle cx="100" cy="12" r="3.5" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ================= HEADER ================= -->
+<header class="site-header" id="siteHeader">
+  <div class="header-inner container">
+    <a href="#top" class="brand">
+      <img src="images/logo.png" alt="Doçuras do céu" class="brand-icon-img"
+        onerror="this.outerHTML='&lt;svg class=&quot;brand-icon&quot; width=&quot;30&quot; height=&quot;30&quot;&gt;&lt;use href=&quot;#ico-cake&quot;/&gt;&lt;/svg&gt;';">
+      <span class="brand-name">Doçuras do céu</span>
+    </a>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="#cardapio">Cardápio</a>
+      <a href="#mais-pedidos">Mais Pedidos</a>
+      <a href="#como-funciona">Como Funciona</a>
+      <a href="#depoimentos">Depoimentos</a>
+      <a href="#contato">Contato</a>
+    </nav>
+
+    <div class="header-actions">
+      <div class="user-chip" id="userChip" style="display:none">
+        <img id="userChipAvatar" src="images/logo.png" alt="">
+        <span id="userChipName"></span>
+        <button class="user-logout" id="logoutBtn" aria-label="Sair">Sair</button>
+      </div>
+      <button class="icon-btn cart-btn" id="cartOpenBtn" aria-label="Abrir carrinho">
+        <svg width="22" height="22"><use href="#ico-cart"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-petals" aria-hidden="true"></div>
+  <div class="container hero-inner">
+    <div class="hero-text">
+      <p class="eyebrow">Um pedacinho do céu em cada mordida ☁️</p>
+      <h1>Bolos que
+        <span class="script">adoçam</span>
+        cada momento especial da sua vida</h1>
+      <p class="hero-desc">Bolos artesanais feitos com carinho, coberturas generosas e aquele toque de amor em cada fatia. Feito por Déborah, em Brás de Pina — RJ. </p>
+      <div class="hero-cta">
+        <a href="#cardapio" class="btn btn-primary"> Ver cardápio   </a>
+      </div>
+      <ul class="hero-stats">
+        <li><strong>11</strong><span>sabores autorais</span></li>
+        <li><strong>100%</strong><span>artesanal e caseiro</span></li>
+        <li><strong>☁️</strong><span>feito com amor</span></li>
+      </ul>
+    </div>
+
+    <div class="hero-art">
+      <div class="hero-cake-card">
+        <div class="hero-cake-media">
+          <img src="images/hero-bolo.jpg" alt="Bolo artesanal Doçuras do céu com calda de goiabada"
+            class="hero-cake-photo" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </div>
+  <svg class="section-flourish" width="200" height="24"><use href="#ico-flourish"/></svg>
+</section>
+
+<!-- ================= CATEGORIAS ================= -->
+<section class="categories container" aria-label="Filtrar bolos por categoria">
+  <button class="cat-pill active" data-filter="todos">Todos</button>
+  <button class="cat-pill" data-filter="classica">Clássica</button>
+  <button class="cat-pill" data-filter="especial">Especial</button>
+</section>
+
+<!-- ================= VITRINE ANIMADA DE BOLOS ================= -->
+<section class="cake-slider" id="mais-pedidos" data-theme="classica">
+  <div class="container section-head">
+    <p class="eyebrow">Destaques</p>
+    <h2>Peça o seu e adoce o seu dia</h2>
+  </div>
+
+  <div class="container">
+    <div class="slider-stage" id="sliderStage">
+      <div class="slider-decor" id="sliderDecor" aria-hidden="true"></div>
+
+      <button class="slider-arrow prev" id="sliderPrev" aria-label="Bolo anterior">‹</button>
+
+      <div class="slider-photo-wrap">
+        <span class="slider-index" id="sliderIndex">01</span>
+        <div class="slider-photo" id="sliderPhoto"></div>
+      </div>
+
+      <div class="slider-info" id="sliderInfo">
+        <span class="slider-cat" id="sliderCat">Clássicos</span>
+        <h3 id="sliderName">—</h3>
+        <p id="sliderDesc">—</p>
+        <div class="slider-footer">
+          <span class="slider-price" id="sliderPrice">R$ 0,00</span>
+          <button class="btn btn-primary" id="sliderAddBtn">Adicionar ao carrinho</button>
+        </div>
+      </div>
+
+      <button class="slider-arrow next" id="sliderNext" aria-label="Próximo bolo">›</button>
+    </div>
+
+    <div class="slider-thumbs" id="sliderThumbs"></div>
+  </div>
+</section>
+
+<!-- ================= CARDÁPIO / GRID ================= -->
+<section class="cardapio container" id="cardapio">
+  <div class="section-head">
+    <p class="eyebrow">Nosso Cardápio </p>
+    <h2>Escolha o seu favorito</h2>
+  </div>
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
+<!-- ================= COMO FUNCIONA ================= -->
+<section class="como-funciona" id="como-funciona">
+  <div class="container">
+    <div class="section-head light">
+      <p class="eyebrow">Simples assim</p>
+      <h2>Do pedido à mesa em 3 passos</h2>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <span class="step-num">01</span>
+        <h3>Escolha e apaixone-se</h3>
+        <p>Navegue pelo nosso catálogo e selecione o seu bolo favorito entre as nossas linhas Clássica e Especial. O sabor perfeito para adoçar o seu dia.</p>
+      </li>
+      <li class="step">
+        <span class="step-num">02</span>
+        <h3>Confirme o seu pedido</h3>
+        <p>Finalize pelo WhatsApp em apenas um clique. Todos os detalhes do seu bolo, entrega e pagamento já chegam prontos para a validação.</p>
+      </li>
+      <li class="step">
+        <span class="step-num">03</span>
+        <h3>Receba e saboreie</h3>
+        <p>Combine a retirada direto em nosso estabelecimento ou escolha receber no conforto da sua casa. Seu bolo é preparado exclusivamente para você.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================= DEPOIMENTOS ================= -->
+<section class="depoimentos container" id="depoimentos">
+  <div class="section-head">
+    <p class="eyebrow">Quem já provou</p>
+    <h2>Palavras que adoçam o dia</h2>
+  </div>
+  <div class="testimonial-slider" id="testimonialSlider">
+    <div class="testimonial-track" id="testimonialTrack"></div>
+  </div>
+  <div class="carousel-dots" id="testimonialDots"></div>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer" id="contato">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href="#top" class="brand">
+        <img src="images/logo.png" alt="Doçuras do céu" class="brand-icon-img footer-logo"
+          onerror="this.outerHTML='&lt;svg class=&quot;brand-icon&quot; width=&quot;28&quot; height=&quot;28&quot;&gt;&lt;use href=&quot;#ico-cake&quot;/&gt;&lt;/svg&gt;';">
+        <span class="brand-name">Doçuras do céu</span>
+      </a>
+      <p>Bolos caseiros feitos com carinho em Brás de Pina — RJ. Um pedacinho do céu em cada mordida.</p>
+      <nav class="footer-social" aria-label="Redes sociais">
+        <a href="https://www.instagram.com/docurasdoceu.bolosedoces/" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
+      </nav>
+    </div>
+
+    <nav class="footer-col" aria-label="Navegação do rodapé">
+      <h4>Navegação</h4>
+      <a href="#cardapio">Cardápio</a>
+      <a href="#mais-pedidos">Mais pedidos</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#depoimentos">Depoimentos</a>
+    </nav>
+
+    <nav class="footer-col" aria-label="Atendimento">
+      <h4>Atendimento</h4>
+      <a href="https://wa.me/5521987798912" target="_blank" rel="noopener">Encomendas pelo WhatsApp</a>
+      <a href="https://www.instagram.com/docurasdoceu.bolosedoces/" target="_blank" rel="noopener">@docurasdoceu.bolosedoces</a>
+      <span>Brás de Pina — RJ</span>
+    </nav>
+
+    <div class="footer-col newsletter">
+      <h4>Receba novidades e cupons</h4>
+      <form id="newsletterForm" class="newsletter-form">
+        <input type="email" placeholder="seu@email.com" required aria-label="Seu e-mail">
+        <button type="submit">Enviar</button>
+      </form>
+      <p class="newsletter-msg" id="newsletterMsg"></p>
+    </div>
+  </div>
+
+  <div class="footer-bottom container">
+    <span>© <span id="year"></span> Doçuras do céu — Bolos e Doces. Todos os direitos reservados.</span>
+    <span class="payments">Pagamento combinado direto no pedido pelo WhatsApp</span>
+    <a href="admin.html" class="admin-link">Área administrativa</a>
+  </div>
+</footer>
+
+<!-- ================= CARRINHO (DRAWER) ================= -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Carrinho de compras">
+  <div class="cart-header">
+    <h3>Seu carrinho</h3>
+    <button class="icon-btn" id="cartCloseBtn" aria-label="Fechar carrinho">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <p class="cart-empty" id="cartEmptyMsg">Seu carrinho está vazio. Que tal adicionar um docinho? 🌸</p>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-options">
+      <div class="cart-option-group">
+        <span class="cart-option-label">Data e horário da encomenda</span>
+        <div class="cart-datetime-row">
+          <label class="cart-datetime-field" id="dateField">
+            <svg width="16" height="16"><use href="#ico-calendar"/></svg>
+            <span class="dt-mask" aria-hidden="true">00/00/0000</span>
+            <input type="date" id="orderDate" class="cart-date-input" aria-label="Data da encomenda (dd/mm/aaaa)">
+          </label>
+          <label class="cart-datetime-field" id="timeField">
+            <svg width="16" height="16"><use href="#ico-clock"/></svg>
+            <span class="dt-mask" aria-hidden="true">00:00</span>
+            <input type="time" id="orderTime" class="cart-time-input" aria-label="Horário da encomenda (hh:mm)">
+          </label>
+        </div>
+        <p class="cart-delivery-note">Preparamos nossos bolos apenas sob encomenda! Escolha uma data de entrega com pelo menos <strong>2 dias de antecedência</strong>, dentro do nosso horário de funcionamento: <strong>seg. a sex. das 9h às 18h</strong> e <strong>sáb. das 8h às 13h</strong> (fechado aos domingos).</p>
+      </div>
+
+      <div class="cart-option-group">
+        <span class="cart-option-label">Forma de pagamento</span>
+        <div class="cart-radio-group" id="paymentGroup">
+          <label class="cart-radio">
+            <input type="radio" name="payment" value="pix">
+            <span>Pix</span>
+          </label>
+          <label class="cart-radio">
+            <input type="radio" name="payment" value="debito">
+            <span>Débito</span>
+          </label>
+          <label class="cart-radio">
+            <input type="radio" name="payment" value="credito">
+            <span>Crédito</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="cart-option-group">
+        <span class="cart-option-label">Forma de entrega</span>
+        <div class="cart-radio-group" id="deliveryGroup">
+          <label class="cart-radio">
+            <input type="radio" name="delivery" value="retirada">
+            <span>Retirar em loja</span>
+          </label>
+          <label class="cart-radio">
+            <input type="radio" name="delivery" value="motorista">
+            <span>Motorista parceiro (Uber/99)</span>
+          </label>
+        </div>
+        <p class="cart-delivery-note">A solicitação e o custo do motorista de aplicativo ficam por conta do cliente.</p>
+      </div>
+    </div>
+
+    <div class="cart-total-row">
+      <span>Total</span>
+      <strong id="cartTotal">R$ 0,00</strong>
+    </div>
+    <button class="btn btn-primary btn-block" id="checkoutBtn">
+      <svg width="18" height="18"><use href="#ico-whatsapp"/></svg>
+      Finalizar pedido no WhatsApp
+    </button>
+    <p class="cart-note">Você será redirecionado ao WhatsApp com seu pedido pronto para confirmar.</p>
+  </div>
+</aside>
+
+<!-- ================= TOAST ================= -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ================= CONFETE (canvas de raspinhas ao adicionar) ================= -->
+<div class="sprinkle-burst" id="sprinkleBurst"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
